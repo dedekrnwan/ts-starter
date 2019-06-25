@@ -18,15 +18,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Helper = require("./../helper");
+const Middleware = require("./../middleware");
 const decorators_express_1 = require("@dedekrnwan/decorators-express");
-let WelcomeController = 
-// @ClassMiddleware.before([
-//     Middleware.Auth.Jwt
-// ])
-class WelcomeController {
+let WelcomeController = class WelcomeController {
     constructor() {
         this.index = (request, response, next) => __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log(this);
                 next(new Helper.Response().ok(`Mantab`, {}));
             }
             catch (error) {
@@ -37,14 +35,13 @@ class WelcomeController {
 };
 __decorate([
     decorators_express_1.Root(),
+    decorators_express_1.RouteMiddleware.before([
+        Middleware.Auth.Jwt.authenticated
+    ]),
     __metadata("design:type", Object)
 ], WelcomeController.prototype, "index", void 0);
 WelcomeController = __decorate([
-    decorators_express_1.Controller('/welcome')
-    // @ClassMiddleware.before([
-    //     Middleware.Auth.Jwt
-    // ])
-    ,
+    decorators_express_1.Controller('/welcome'),
     __metadata("design:paramtypes", [])
 ], WelcomeController);
 exports.WelcomeController = WelcomeController;

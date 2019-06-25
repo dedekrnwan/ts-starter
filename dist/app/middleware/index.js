@@ -4,6 +4,7 @@ const Auth = require("./auth.middleware");
 exports.Auth = Auth;
 const response_middleware_1 = require("./response.middleware");
 exports.Response = response_middleware_1.Response;
+const error_middleware_1 = require("./error.middleware");
 const cors = require("cors");
 const before = (app) => {
     let middlewares;
@@ -32,7 +33,9 @@ exports.after = after;
 const error = (app) => {
     let middlewares;
     //declaring used middleware
-    middlewares = [];
+    middlewares = [
+        error_middleware_1.Error
+    ];
     middlewares.forEach((middleware) => {
         app.use(middleware);
     });

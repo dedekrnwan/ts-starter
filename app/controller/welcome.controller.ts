@@ -15,6 +15,7 @@ export class WelcomeController {
     ])
     index = async (request:express.Request, response:express.Response, next:express.NextFunction):Promise<any> => {
         try {
+            console.log(this)
             next(new Helper.Response().ok(`Mantab`,{}))
         } catch (error) {
             next(new Helper.Exception(error))
