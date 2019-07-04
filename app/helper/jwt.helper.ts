@@ -79,14 +79,9 @@ export const Jwt = {
                     try {
                         if(error)
                             reject(error)
-                        var signOptions = {
-                            issuer:  'local',
-                            subject:  'Json web token',
-                            audience:  'Typescript',
-                            expiresIn:  "12h",
-                            algorithm: "RS256",
-                        };
-                        jwt.sign(data,result,signOptions, (error,token) => {
+                        const config = await Config.Jwt();
+                        config.algorithm = "RS256";
+                        jwt.sign(data,result,config, (error,token) => {
                             if(error)
                                 reject(error)
 
@@ -104,20 +99,27 @@ export const Jwt = {
     verify: async (token:string, publicKey?:string | Buffer):Promise<any> => {
         return new Promise(async (resolve, reject) => {
             try{
-                let privateKey:string;
-                fs.readFile(`${__dirname}/../utils/private.key`, 'utf-8',(error, data) => {
-                    if(error)
-                        reject(error)
+                if(!publicKey){
+                    fs.readFile(`${__dirname}/../utils/public.key`, 'utf-8', async (error, data) => {
+                        if(error)
+                            reject(error)
+    
+                        const config = await Config.Jwt();
+                        jwt.verify(token, data,config, (error, decoded) => {
+                            if(error)
+                                reject(error)
+                            resolve(decoded)
+                        })
+                    });
+                }else{
+                    const config = await Config.Jwt();
+                    jwt.verify(token, publicKey,config, (error, decoded) => {
+                        if(error)
+                            reject(error)
+                        resolve(decoded)
+                    })
+                }
 
-                    privateKey = data;
-                });
-                const key = (publicKey) ? publicKey : privateKey; 
-                const result:string | object = await jwt.verify(
-                    token,
-                    key,
-                    await Config.Jwt(),
-                ) 
-                resolve(result)
             }catch(error) { 
                 reject(error)
             }

@@ -1,6 +1,5 @@
 import * as express from "express";
 import * as bcryptjs from "bcryptjs"
-import { getConnection, Connection } from "typeorm";
 
 import * as Helper from "./../helper";
 import * as Middleware from "./../middleware";
@@ -16,7 +15,9 @@ import { register } from "../interfaces/entity/joi";
 
 @Controller('/auth')
 export class AuthController {
+    user:User
     constructor(){
+        this.user = new User();
     }
     @Route(<IRoutes> {
         path: '/login',
@@ -27,31 +28,30 @@ export class AuthController {
     ])
     login = async (request:express.Request, response:express.Response, next:express.NextFunction):Promise<any> => {
         try {
-            const connection = getConnection('default');
-            connection.getRepository(User).findOne({
-                email: request.body.email,
-            }).then((user) => {
+            this.user.model.findOne({
+                email: request.body.email
+            }).then(user => {
                 bcryptjs.compare(request.body.password, user.password)
-                    .then((result) => {
-                        if(result){
-                            Helper.Jwt.sign({
-                                id: user.id
-                            }).then((token) => {
-                                next(Helper.Response.prototype.ok('You successfully login', {
-                                    token: token
-                                }))
-                            }).catch((error) => {
-                                next(new Helper.Exception(error))
-                            })
-                        }else{
-                            //password false
-                            next(Helper.Response.prototype.badRequest('Email or password is invalid', {}));
-                        }
-                    }).catch((error) => {
-                        next(new Helper.Exception(error))
-                    })
-            }).catch((error) => {
-                next(Helper.Response.prototype.badRequest('Email or password is invalid!', error));
+                .then((result) => {
+                    if(result){
+                        Helper.Jwt.sign({
+                            id: user.id
+                        }).then((token) => {
+                            next(Helper.Response.prototype.ok('You successfully login', {
+                                token: token
+                            }))
+                        }).catch((error) => {
+                            next(new Helper.Exception(error))
+                        })
+                    }else{
+                        //password false
+                        next(Helper.Response.prototype.badRequest('Email or password is invalid', {}));
+                    }
+                }).catch((error) => {
+                    next(new Helper.Exception(error))
+                })
+            }).catch(error => {
+                next(Helper.Response.prototype.badRequest('Email or password is invalid', {}));
             })
         } catch (error) {
             next(new Helper.Exception(error))
@@ -68,12 +68,11 @@ export class AuthController {
         try {
             Helper.bcryptjs.hash(request.body['password']).then((result) => {
                 request.body['password'] = result;
-                const connection = getConnection('default');
-                connection.manager.insert(User, request.body).then((result) => {
-                    next(Helper.Response.prototype.created('your account has been created', result))
-                }).catch((error) => {
+                this.user.model(request.body).save().then(user => {
+                    next(Helper.Response.prototype.created('your account has been created', user))
+                }).catch(error => {
                     next(new Helper.Exception(error))
-                });
+                })
             }).catch((error) => {
                 next(new Helper.Exception(error))
             })

@@ -72,29 +72,6 @@ let AuthController = class AuthController {
                 }).catch((error) => {
                     next(new Helper.Exception(error));
                 });
-                // connection.getRepository(User).findOne({
-                //     email: request.body.email,
-                // }).then((user) => {
-                //     bcryptjs.compare(request.body.password, user.password)
-                //         .then((result) => {
-                //             if(result)
-                //                 Helper.Jwt.sign({
-                //                     id: user.id
-                //                 }).then((token) => {
-                //                     next(Helper.Response.prototype.ok('You successfully login', {
-                //                         token: token
-                //                     }))
-                //                 }).catch((error) => {
-                //                     next(new Helper.Exception(error))
-                //                 })
-                //             //password false
-                //             next(Helper.Response.prototype.badRequest('Email or password is invalid', {}));
-                //         }).catch((error) => {
-                //             next(new Helper.Exception(error))
-                //         })
-                // }).catch((error) => {
-                //     next(Helper.Response.prototype.badRequest('Email or password is invalid!', error));
-                // })
             }
             catch (error) {
                 next(new Helper.Exception(error));

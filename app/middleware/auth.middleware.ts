@@ -13,14 +13,11 @@ export const Jwt = {
             }else{
                 //if can verify the token, set req.user and pass to next middleware
                 token = token.replace('Bearer ','');
-                // const decoded = await new Helper.Jwt(token).verify();
-                let decoded:object;
                 Helper.Jwt.verify(token).then((result) => {
-                    decoded = result
-                }).catch((error) => {
-                    throw error;
+                    next();
+                }).catch(async (error) => {
+                    next(await new Helper.Exception(error))
                 })
-                next();
             }
         } catch (error) {
             next(await new Helper.Exception(error))

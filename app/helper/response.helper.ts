@@ -80,7 +80,7 @@ export class Response
                 message: message,
                 timestamp: new Date()
             },
-            data: data
+            data
         }
     }
     //#endregion

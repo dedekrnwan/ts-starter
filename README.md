@@ -63,6 +63,7 @@ Lib folder used for your Express Js setup
     .
     ├── lib
     |   ├── app.ts                  # Setting app your express app in this file
+    |   ├── kernel.ts               # Setting app your database and middlewares here
     │   └── server.ts               # Running express app
 
 ### Public
