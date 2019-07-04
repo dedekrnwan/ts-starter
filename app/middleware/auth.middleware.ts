@@ -1,6 +1,7 @@
 import * as express from "express";
-
 import * as Helper from "./../helper";
+import { decode } from "punycode";
+
 export const Jwt = {
     authenticated : async (req: express.Request, res:express.Response, next:express.NextFunction):Promise<any> =>{
         try {
@@ -12,12 +13,16 @@ export const Jwt = {
             }else{
                 //if can verify the token, set req.user and pass to next middleware
                 token = token.replace('Bearer ','');
-                let Jwt_Helper = new Helper.Jwt(token);
-                const decoded = await Jwt_Helper.verify();
+                // const decoded = await new Helper.Jwt(token).verify();
+                let decoded:object;
+                Helper.Jwt.verify(token).then((result) => {
+                    decoded = result
+                }).catch((error) => {
+                    throw error;
+                })
                 next();
             }
         } catch (error) {
-            console.log(error)
             next(await new Helper.Exception(error))
         }
     },

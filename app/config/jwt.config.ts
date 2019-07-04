@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import "localenv"
 import { IJwt, IJwtOptions } from "./../interfaces";
 
 export const Jwt = ():any => {
@@ -17,6 +17,6 @@ export const Jwt = ():any => {
             subject:  'noreply@ts.com',
             audience:  'http://localhost/',
             expiresIn:  "12h",
-            algorithm:  "RS256"   // RSASSA [ "RS256", "RS384", "RS512" ]
+            algorithm:  ["RS256"]   // RSASSA [ "RS256", "RS384", "RS512" ]
     }
 }

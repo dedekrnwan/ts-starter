@@ -5,6 +5,7 @@ class Response {
     }
     //#region 2**
     ok(message = `Ok`, data) {
+        console.log([message, data]);
         return this.build(true, 200, message, data);
     }
     created(message = `Data Created`, data) {

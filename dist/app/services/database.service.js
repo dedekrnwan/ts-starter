@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const typeorm_1 = require("typeorm");
 const mongoose = require("mongoose");
 const database_config_1 = require("./../config/database.config");
 class Database {
@@ -29,6 +30,19 @@ class Database {
             //         process.exit(0)
             //     });
             // });
+        });
+        this.orm = () => __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, rejects) => __awaiter(this, void 0, void 0, function* () {
+                try {
+                    const connections = yield typeorm_1.createConnections([
+                        database_config_1.cores
+                    ]);
+                    resolve(connections);
+                }
+                catch (error) {
+                    rejects(error);
+                }
+            }));
         });
     }
 }

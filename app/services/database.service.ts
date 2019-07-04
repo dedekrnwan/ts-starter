@@ -1,5 +1,7 @@
+import { createConnections, Connection } from "typeorm";
 import * as mongoose from "mongoose";
-import { fractal } from "./../config/database.config";
+
+import { fractal, cores } from "./../config/database.config";
 
 export class Database {
     constructor(){
@@ -26,5 +28,18 @@ export class Database {
         //         process.exit(0)
         //     });
         // });
+    }
+
+    orm = async ():Promise<any> => {
+        return new Promise( async (resolve, rejects):Promise<any> => {
+            try {
+                const connections = await createConnections([
+                    cores
+                ])
+                resolve(connections);
+            } catch (error) {
+                rejects(error)
+            }
+        })
     }
 }

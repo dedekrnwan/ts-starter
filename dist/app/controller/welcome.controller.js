@@ -24,7 +24,6 @@ let WelcomeController = class WelcomeController {
     constructor() {
         this.index = (request, response, next) => __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log(this);
                 next(new Helper.Response().ok(`Mantab`, {}));
             }
             catch (error) {

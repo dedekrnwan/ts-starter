@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import "localenv"
 import { IApp} from "../interfaces";
 
 export const Server = <IApp> {
